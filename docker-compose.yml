@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: learning
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: xavi
+      MYSQL_PASSWORD: xavi
     ports:
       - "3306:3306"
