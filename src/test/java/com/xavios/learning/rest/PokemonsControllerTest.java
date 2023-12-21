@@ -1,5 +1,6 @@
 package com.xavios.learning.rest;
 
+import com.xavios.learning.domain.PokemonsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ class PokemonsControllerTest {
 
     @Test
     void it_should_return_not_null() {
+        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(List.of()));
+
         assertThat(pokemonsController.getPokemons())
                 .as("It should not null")
                 .isNotNull();
