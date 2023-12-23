@@ -9,6 +9,6 @@ import java.util.Map;
 @Service
 public class PokemonsService{
     public Mono<List<Map<String, Object>>> getAllPokemons(){
-        return null;
+        return Mono.empty();
     };
 }
