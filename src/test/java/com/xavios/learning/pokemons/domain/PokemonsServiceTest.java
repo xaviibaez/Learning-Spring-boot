@@ -1,6 +1,6 @@
-package com.xavios.learning.domain;
+package com.xavios.learning.pokemons.domain;
 
-import com.xavios.learning.http.PokemonsWebClient;
+import com.xavios.learning.pokemons.http.PokemonsWebClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

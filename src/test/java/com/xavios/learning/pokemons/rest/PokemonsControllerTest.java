@@ -1,6 +1,6 @@
-package com.xavios.learning.rest;
+package com.xavios.learning.pokemons.rest;
 
-import com.xavios.learning.domain.PokemonsService;
+import com.xavios.learning.pokemons.domain.PokemonsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

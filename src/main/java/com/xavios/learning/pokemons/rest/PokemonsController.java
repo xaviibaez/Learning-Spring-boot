@@ -1,6 +1,6 @@
-package com.xavios.learning.rest;
+package com.xavios.learning.pokemons.rest;
 
-import com.xavios.learning.domain.PokemonsService;
+import com.xavios.learning.pokemons.domain.PokemonsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

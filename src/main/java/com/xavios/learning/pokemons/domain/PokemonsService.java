@@ -1,6 +1,6 @@
-package com.xavios.learning.domain;
+package com.xavios.learning.pokemons.domain;
 
-import com.xavios.learning.http.PokemonsWebClient;
+import com.xavios.learning.pokemons.http.PokemonsWebClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

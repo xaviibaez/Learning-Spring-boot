@@ -1,4 +1,4 @@
-package com.xavios.learning.http;
+package com.xavios.learning.pokemons.http;
 
 import reactor.core.publisher.Mono;
 
