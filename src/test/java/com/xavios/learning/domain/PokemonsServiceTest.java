@@ -10,17 +10,20 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
-import static reactor.core.publisher.Mono.when;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PokemonsServiceTest {
 
     @Test
     void it_should_return_not_null() {
+        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(List.of()));
+
         assertThat(pokemonsService.getAllPokemons())
                 .as("It should return not null")
                 .isNotNull();
@@ -28,8 +31,7 @@ class PokemonsServiceTest {
 
     @Test
     void it_should_call_pokemons_web_client() {
-        //TODO: este no va -> java.lang.NullPointerException: publisher
-        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(List.of()));
+        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(List.of(Map.of())));
 
         StepVerifier.create(pokemonsService.getAllPokemons())
                 .as("It should call pokemons web client")
