@@ -17,11 +17,11 @@ public class PokemonsController {
     @GetMapping
     public Mono<ResponseEntity<Map<String, Object>>> getPokemons() {
         return pokemonsService.getAllPokemons()
-                .map(this::responseAssembler)
+                .map(this::assemblerResponse)
                 .map(ResponseEntity::ok);
     }
 
-    private Map<String, Object> responseAssembler(List<Map<String, Object>> pokemons) {
+    private Map<String, Object> assemblerResponse(List<Map<String, Object>> pokemons) {
         return Map.of("pokemons", pokemons);
     }
 
