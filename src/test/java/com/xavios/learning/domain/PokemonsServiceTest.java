@@ -41,6 +41,16 @@ class PokemonsServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void it_should_return_expected_pokemons_list() {
+        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(pokemonsList));
+
+        StepVerifier.create(pokemonsService.getAllPokemons())
+                .as("it should return expected pokemons list")
+                .expectNext(List.of(Map.of("pokemons", pokemonsList)))
+                .verifyComplete();
+    }
+
     @BeforeEach
     void setup() {
         this.pokemonsService = new PokemonsService(pokemonsWebClient);
@@ -50,4 +60,6 @@ class PokemonsServiceTest {
 
     @Mock
     private PokemonsWebClient pokemonsWebClient;
+    @Mock
+    private List<Map<String, Object>> pokemonsList;
 }
