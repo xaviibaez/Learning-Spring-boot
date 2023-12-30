@@ -5,6 +5,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
-public interface PokemonsWebClient {
-    Mono<List<Map<String, Object>>> getAllPokemons();
+public class PokemonsWebClient {
+
+    public Mono<List<Map<String, Object>>> getAllPokemons() {
+        return Mono.empty();
+    }
 }
