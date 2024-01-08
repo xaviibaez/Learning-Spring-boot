@@ -15,8 +15,8 @@ import java.time.Duration;
 public class PokemonsWebClientConfiguration {
 
     @Bean("pokemons-web-client")
-    public WebClient pokemonsWebClient() {
-        return getWebClient(getHttpClient());
+    public PokemonsWebClient getPokemonsWebClient() {
+        return new PokemonsWebClient(getWebClient(getHttpClient()));
     }
 
     private HttpClient getHttpClient() {
@@ -37,11 +37,8 @@ public class PokemonsWebClientConfiguration {
     private WebClient getWebClient(HttpClient httpClient) {
         return webClientBuilder
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .baseUrl(url)
                 .build();
     }
 
     private final WebClient.Builder webClientBuilder = WebClient.builder();
-
-    private final String url = "api/v2/pokemon";
 }

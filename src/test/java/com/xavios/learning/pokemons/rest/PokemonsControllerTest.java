@@ -21,7 +21,7 @@ class PokemonsControllerTest {
 
     @Test
     void it_should_return_not_null() {
-        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(List.of()));
+        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(Map.of()));
 
         assertThat(pokemonsController.getPokemons())
                 .as("It should not null")
@@ -30,7 +30,7 @@ class PokemonsControllerTest {
 
     @Test
     void it_should_call_pokemon_service() {
-        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(List.of()));
+        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(Map.of()));
 
         StepVerifier.create(pokemonsController.getPokemons())
                 .as("it should call pokemon service")
@@ -59,5 +59,5 @@ class PokemonsControllerTest {
     @Mock
     private PokemonsService pokemonsService;
     @Mock
-    private List<Map<String, Object>> pokemonsList;
+    private Map<String, Object> pokemonsList;
 }

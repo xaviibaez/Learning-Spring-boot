@@ -21,7 +21,7 @@ public class PokemonsController {
                 .map(ResponseEntity::ok);
     }
 
-    private Map<String, Object> assemblerResponse(List<Map<String, Object>> pokemons) {
+    private Map<String, Object> assemblerResponse(Map<String, Object> pokemons) {
         return Map.of("pokemons", pokemons);
     }
 

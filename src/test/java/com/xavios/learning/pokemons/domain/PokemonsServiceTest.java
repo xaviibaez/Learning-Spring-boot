@@ -22,7 +22,7 @@ class PokemonsServiceTest {
 
     @Test
     void it_should_return_not_null() {
-        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(List.of()));
+        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(Map.of()));
 
         assertThat(pokemonsService.getAllPokemons())
                 .as("It should return not null")
@@ -31,7 +31,7 @@ class PokemonsServiceTest {
 
     @Test
     void it_should_call_pokemons_web_client() {
-        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(List.of(Map.of())));
+        when(pokemonsWebClient.getAllPokemons()).thenReturn(Mono.just(Map.of()));
 
         StepVerifier.create(pokemonsService.getAllPokemons())
                 .as("It should call pokemons web client")
@@ -47,7 +47,7 @@ class PokemonsServiceTest {
 
         StepVerifier.create(pokemonsService.getAllPokemons())
                 .as("it should return expected pokemons list")
-                .expectNext(List.of(Map.of("pokemons", pokemonsList)))
+                .expectNext(Map.of("pokemons", pokemonsList))
                 .verifyComplete();
     }
 
@@ -61,5 +61,5 @@ class PokemonsServiceTest {
     @Mock
     private PokemonsWebClient pokemonsWebClient;
     @Mock
-    private List<Map<String, Object>> pokemonsList;
+    private Map<String, Object> pokemonsList;
 }
