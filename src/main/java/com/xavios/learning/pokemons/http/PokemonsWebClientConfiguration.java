@@ -14,7 +14,7 @@ import java.time.Duration;
 @Configuration
 public class PokemonsWebClientConfiguration {
 
-    @Bean("pokemons-web-client")
+    @Bean
     public PokemonsWebClient getPokemonsWebClient() {
         return new PokemonsWebClient(getWebClient(getHttpClient()));
     }
