@@ -7,14 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
-import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class PokemonsWebClientTest {
 
@@ -38,7 +38,8 @@ class PokemonsWebClientTest {
     @BeforeEach
     void startServer() {
         server = ClientAndServer.startClientAndServer(0);
-        pokemonsWebClient = new PokemonsWebClientConfiguration().getPokemonsWebClient();
+        var port = server.getPort();
+        pokemonsWebClient = new PokemonsWebClient(WebClient.builder(), "http://127.0.0.1:" + port + "/api/v2/pokemon");
     }
 
     @AfterEach
@@ -49,7 +50,7 @@ class PokemonsWebClientTest {
     private void setupResponseClient() {
         server.when(request()
                         .withMethod("GET")
-                        .withPath("https://pokeapi.co/api/v2/pokemon"))
+                        .withPath("/api/v2/pokemon"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)

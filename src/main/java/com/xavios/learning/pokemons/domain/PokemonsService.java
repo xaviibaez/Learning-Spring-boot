@@ -10,11 +10,12 @@ import java.util.Map;
 @Service
 public class PokemonsService {
     public Mono<Map<String, Object>> getAllPokemons() {
+        //TODO: iterar por skip y limit
         return pokemonsWebClient.getAllPokemons().map(this::assemblerResponse);
     }
 
-    private Map<String, Object> assemblerResponse(Map<String, Object> x) {
-        return Map.of("pokemons", x);
+    private Map<String, Object> assemblerResponse(Map<String, Object> body) {
+        return Map.of("pokemons", body);
     }
 
     public PokemonsService(PokemonsWebClient pokemonsWebClient) {

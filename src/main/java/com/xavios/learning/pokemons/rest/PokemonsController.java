@@ -16,6 +16,7 @@ public class PokemonsController {
 
     @GetMapping
     public Mono<ResponseEntity<Map<String, Object>>> getPokemons() {
+        //TODO: pasarlo a lista
         return pokemonsService.getAllPokemons()
                 .map(this::assemblerResponse)
                 .map(ResponseEntity::ok);
