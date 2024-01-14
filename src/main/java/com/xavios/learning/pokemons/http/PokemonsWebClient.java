@@ -20,6 +20,14 @@ public class PokemonsWebClient {
                 .get()
                 .uri(uri)
                 .retrieve()
+                .onStatus(x -> x.isError(), error -> {
+                    return error
+                            .bodyToMono(String.class)
+                            .defaultIfEmpty("Error")
+                            .flatMap(body -> Mono.error(
+                                    new Exception(error.toString())
+                            ));
+                })
                 .bodyToMono(new ParameterizedTypeReference<>() {
                 });
     }

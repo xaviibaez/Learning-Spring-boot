@@ -27,12 +27,21 @@ class PokemonsWebClientTest {
 
     @Test
     void it_should_return_expected_response() {
-        setupResponseClient();
+        setupResponseClient(RESPONSE_OK, 200);
 
         StepVerifier.create(pokemonsWebClient.getAllPokemons())
                 .as("It should return expected response")
                 .expectNext(RESPONSE_OK)
                 .verifyComplete();
+    }
+
+    @Test
+    void it_should_return_error_when_have_one_error_in_client() {
+        setupResponseClient(RESPONSE_KO, 500);
+
+        StepVerifier.create(pokemonsWebClient.getAllPokemons())
+                .as("It should return error")
+                .verifyError();
     }
 
     @BeforeEach
@@ -47,14 +56,14 @@ class PokemonsWebClientTest {
         server.stop();
     }
 
-    private void setupResponseClient() {
+    private void setupResponseClient(Map<String, Object> response, Integer statusCode) {
         server.when(request()
                         .withMethod("GET")
                         .withPath("/api/v2/pokemon"))
                 .respond(response()
-                        .withStatusCode(200)
+                        .withStatusCode(statusCode)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(mapToJsonString(RESPONSE_OK)));
+                        .withBody(mapToJsonString(response)));
     }
 
     private String mapToJsonString(Map<String, Object> body) {
@@ -69,4 +78,5 @@ class PokemonsWebClientTest {
 
     private static ClientAndServer server;
     private static final Map<String, Object> RESPONSE_OK = Map.of("response", "ok");
+    private static final Map<String, Object> RESPONSE_KO = Map.of("response", "ko");
 }
