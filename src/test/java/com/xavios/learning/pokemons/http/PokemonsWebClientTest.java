@@ -44,6 +44,15 @@ class PokemonsWebClientTest {
                 .verifyError();
     }
 
+    @Test
+    void it_should_return_expected_exception_when_have_one_error_in_client() {
+        setupResponseClient(RESPONSE_KO, 500);
+
+        StepVerifier.create(pokemonsWebClient.getAllPokemons())
+                .as("It should return expected error response")
+                .verifyErrorMessage(RESPONSE_KO_STRING);
+    }
+
     @BeforeEach
     void startServer() {
         server = ClientAndServer.startClientAndServer(0);
@@ -79,4 +88,5 @@ class PokemonsWebClientTest {
     private static ClientAndServer server;
     private static final Map<String, Object> RESPONSE_OK = Map.of("response", "ok");
     private static final Map<String, Object> RESPONSE_KO = Map.of("response", "ko");
+    private static final String RESPONSE_KO_STRING = "{\"response\":\"ko\"}";
 }

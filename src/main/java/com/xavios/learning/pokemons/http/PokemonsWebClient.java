@@ -25,7 +25,7 @@ public class PokemonsWebClient {
                             .bodyToMono(String.class)
                             .defaultIfEmpty("Error")
                             .flatMap(body -> Mono.error(
-                                    new Exception(error.toString())
+                                    new Exception(body)
                             ));
                 })
                 .bodyToMono(new ParameterizedTypeReference<>() {
