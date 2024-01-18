@@ -3,6 +3,7 @@ package com.xavios.learning.pokemons.http;
 import io.netty.channel.ChannelOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -20,14 +21,13 @@ public class PokemonsWebClient {
                 .get()
                 .uri(uri)
                 .retrieve()
-                .onStatus(x -> x.isError(), error -> {
-                    return error
-                            .bodyToMono(String.class)
-                            .defaultIfEmpty("Error")
-                            .flatMap(body -> Mono.error(
-                                    new Exception(body)
-                            ));
-                })
+                .onStatus(HttpStatusCode::isError, error -> error
+                        .bodyToMono(String.class)
+                        .defaultIfEmpty("Error")
+                        .flatMap(body -> Mono.error(
+                                new ClientException(
+                                        String.valueOf(error.statusCode().value()), body)
+                        )))
                 .bodyToMono(new ParameterizedTypeReference<>() {
                 });
     }
