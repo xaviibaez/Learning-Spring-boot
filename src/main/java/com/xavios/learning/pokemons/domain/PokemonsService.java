@@ -15,6 +15,11 @@ public class PokemonsService {
     }
 
     private Map<String, Object> assemblerResponse(Map<String, Object> body) {
+        for (var pokemon : (List<Map<String, Object>>) body.get("results")) {
+            var url = (String) pokemon.get("url");
+            var id = url.substring(34, url.length() - 1);
+            pokemon.put("id", id);
+        }
         return Map.of("pokemons", body);
     }
 
