@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,7 +16,7 @@ public class PokemonsController {
     @GetMapping
     public Mono<ResponseEntity<Map<String, Object>>> getPokemons() {
         //TODO: pasarlo a lista
-        return pokemonsService.getAllPokemons()
+        return pokemonsService.getPokemons()
                 .map(this::assemblerResponse)
                 .map(ResponseEntity::ok);
     }

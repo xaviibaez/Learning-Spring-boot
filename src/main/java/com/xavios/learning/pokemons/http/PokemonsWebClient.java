@@ -19,10 +19,15 @@ import java.util.Map;
 @Component
 public class PokemonsWebClient {
 
-    public Mono<Map<String, Object>> getAllPokemons() {
+    public Mono<Map<String, Object>> getAllPokemons(int offset) {
         return webClient
                 .get()
-                .uri(uri)
+                .uri(uriBuilder -> uriBuilder
+                        .path(uri)
+                        .queryParam("offset", String.valueOf(offset))
+                        .queryParam("limit", String.valueOf(20))
+                        .build()
+                )
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, error -> error
                         .bodyToMono(String.class)

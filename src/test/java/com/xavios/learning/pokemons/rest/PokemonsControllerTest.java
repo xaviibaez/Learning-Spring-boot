@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,7 +20,7 @@ class PokemonsControllerTest {
 
     @Test
     void it_should_return_not_null() {
-        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(Map.of()));
+        when(pokemonsService.getPokemons()).thenReturn(Mono.just(Map.of()));
 
         assertThat(pokemonsController.getPokemons())
                 .as("It should not null")
@@ -30,19 +29,19 @@ class PokemonsControllerTest {
 
     @Test
     void it_should_call_pokemon_service() {
-        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(Map.of()));
+        when(pokemonsService.getPokemons()).thenReturn(Mono.just(Map.of()));
 
         StepVerifier.create(pokemonsController.getPokemons())
                 .as("it should call pokemon service")
                 .assertNext(x -> verify(pokemonsService, only()
                         .description("it should call pokemon service"))
-                        .getAllPokemons())
+                        .getPokemons())
                 .verifyComplete();
     }
 
     @Test
     void it_should_return_expected_pokemons_list() {
-        when(pokemonsService.getAllPokemons()).thenReturn(Mono.just(pokemonsList));
+        when(pokemonsService.getPokemons()).thenReturn(Mono.just(pokemonsList));
 
         StepVerifier.create(pokemonsController.getPokemons())
                 .as("it should return expected pokemons list")
