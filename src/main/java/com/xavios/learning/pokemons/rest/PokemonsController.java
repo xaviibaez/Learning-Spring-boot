@@ -15,14 +15,8 @@ public class PokemonsController {
 
     @GetMapping
     public Mono<ResponseEntity<Map<String, Object>>> getPokemons() {
-        //TODO: pasarlo a lista
         return pokemonsService.getPokemons()
-                .map(this::assemblerResponse)
                 .map(ResponseEntity::ok);
-    }
-
-    private Map<String, Object> assemblerResponse(Map<String, Object> pokemons) {
-        return Map.of("pokemons", pokemons);
     }
 
     public PokemonsController(PokemonsService pokemonsService) {

@@ -19,56 +19,27 @@ public class PokemonsService {
 
     private Mono<List<Map<String, Object>>> getAllPokemons() {
         return pokemonsWebClient.getAllPokemons(0)
-                .doOnNext(x -> System.out.println("TEST " + x))
-                .doOnNext(x -> x.get("next"))
                 .flatMap(pokemonsClientResponse -> {
                     var pokemons = new ArrayList<Map<String, Object>>();
                     pokemons.addAll((List<Map<String, Object>>) pokemonsClientResponse.get("results"));
 
-                    var nextPage = (String) pokemonsClientResponse.get("next");
-
-                    getQueryParams(nextPage);
-
                     var count = (Integer) pokemonsClientResponse.get("count");
-                    for (int i = 20; i < count; i = i + 20) {
-                        pokemons.add((Map<String, Object>) pokemonsWebClient.getAllPokemons(20));
+                    for (int offset = 20; offset < 60; offset = offset + 20) {
+                        //1 -> pokemons.add((Map<String, Object>) pokemonsWebClient.getAllPokemons(offset));
+                        //2 -> pokemonsWebClient.getAllPokemons(offset).map(pokemons::add);
+                        pokemonsWebClient.getAllPokemons(offset)
+                                .flatMap(x -> {
+                                    pokemons.add(x);
+                                    return Mono.just(x);
+                                });
                     }
 
-                    return Mono.just(List.of(Map.of("pokemons", pokemons)));
+                    return Mono.just(pokemons);
                 });
     }
 
     private Map<String, Object> assemblerResponse(List<Map<String, Object>> body) {
-        System.out.println("TEST");
-        return null;
-    }
-
-    private static void getQueryParams(String url) {
-        try {
-            URI uri = new URI(url);
-            String query = uri.getQuery();
-
-            if (query != null) {
-                String[] params = query.split("&");
-
-                for (String param : params) {
-                    String[] keyValue = param.split("=");
-                    if (keyValue.length == 2) {
-                        String key = keyValue[0];
-                        String value = keyValue[1];
-
-                        if ("offset".equals(key)) {
-                            System.out.println("Offset: " + value);
-                        } else if ("limit".equals(key)) {
-                            System.out.println("Limit: " + value);
-                        }
-                    }
-                }
-            }
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        return Map.of("pokemons", body);
     }
 
     public PokemonsService(PokemonsWebClient pokemonsWebClient) {
