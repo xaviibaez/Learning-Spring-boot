@@ -23,7 +23,6 @@ public class PokemonsWebClient {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(uri)
                         .queryParam("offset", String.valueOf(offset))
                         .queryParam("limit", String.valueOf(20))
                         .build()
@@ -40,7 +39,7 @@ public class PokemonsWebClient {
                 });
     }
 
-    public PokemonsWebClient(@Autowired WebClient.Builder webClientBuilder, @Value("${pokemon_web_client}") String uri) {
+    public PokemonsWebClient(@Autowired WebClient.Builder webClientBuilder, @Value("${pokemon_web_client}") String host) {
         var connectionProvider = ConnectionProvider.builder("pokemonClientConnectionPool")
                 .maxConnections(1000)
                 .pendingAcquireMaxCount(2000)
@@ -56,10 +55,9 @@ public class PokemonsWebClient {
 
         this.webClient = webClientBuilder
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .baseUrl(host)
                 .build();
-        this.uri = uri;
     }
 
     private final WebClient webClient;
-    private final String uri;
 }

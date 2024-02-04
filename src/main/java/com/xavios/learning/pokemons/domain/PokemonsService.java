@@ -4,6 +4,8 @@ import com.xavios.learning.pokemons.http.PokemonsWebClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,6 @@ import java.util.Map;
 @Service
 public class PokemonsService {
     public Mono<Map<String, Object>> getPokemons() {
-        //TODO: iterar por skip y limit
         return getAllPokemons()
                 .map(this::assemblerResponse);
     }
@@ -19,12 +20,14 @@ public class PokemonsService {
     private Mono<List<Map<String, Object>>> getAllPokemons() {
         return pokemonsWebClient.getAllPokemons(0)
                 .doOnNext(x -> System.out.println("TEST " + x))
+                .doOnNext(x -> x.get("next"))
                 .flatMap(pokemonsClientResponse -> {
                     var pokemons = new ArrayList<Map<String, Object>>();
                     pokemons.addAll((List<Map<String, Object>>) pokemonsClientResponse.get("results"));
 
                     var nextPage = (String) pokemonsClientResponse.get("next");
-                    nextPage.split("?")[1].split("&");
+
+                    getQueryParams(nextPage);
 
                     var count = (Integer) pokemonsClientResponse.get("count");
                     for (int i = 20; i < count; i = i + 20) {
@@ -38,6 +41,34 @@ public class PokemonsService {
     private Map<String, Object> assemblerResponse(List<Map<String, Object>> body) {
         System.out.println("TEST");
         return null;
+    }
+
+    private static void getQueryParams(String url) {
+        try {
+            URI uri = new URI(url);
+            String query = uri.getQuery();
+
+            if (query != null) {
+                String[] params = query.split("&");
+
+                for (String param : params) {
+                    String[] keyValue = param.split("=");
+                    if (keyValue.length == 2) {
+                        String key = keyValue[0];
+                        String value = keyValue[1];
+
+                        if ("offset".equals(key)) {
+                            System.out.println("Offset: " + value);
+                        } else if ("limit".equals(key)) {
+                            System.out.println("Limit: " + value);
+                        }
+                    }
+                }
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public PokemonsService(PokemonsWebClient pokemonsWebClient) {
