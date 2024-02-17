@@ -24,14 +24,15 @@ public class PokemonsService {
                     pokemons.addAll((List<Map<String, Object>>) pokemonsClientResponse.get("results"));
 
                     var count = (Integer) pokemonsClientResponse.get("count");
-                    for (int offset = 20; offset < 60; offset = offset + 20) {
+                    for (int offset = 20; offset <= 40; offset = offset + 20) {
+                        pokemonsWebClient.getAllPokemons(offset);
                         //1 -> pokemons.add((Map<String, Object>) pokemonsWebClient.getAllPokemons(offset));
                         //2 -> pokemonsWebClient.getAllPokemons(offset).map(pokemons::add);
-                        pokemonsWebClient.getAllPokemons(offset)
+                        /*3 -> pokemonsWebClient.getAllPokemons(offset)
                                 .flatMap(x -> {
                                     pokemons.add(x);
                                     return Mono.just(x);
-                                });
+                                });*/
                     }
 
                     return Mono.just(pokemons);

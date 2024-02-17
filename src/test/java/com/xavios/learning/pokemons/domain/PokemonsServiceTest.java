@@ -9,12 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PokemonsServiceTest {
@@ -50,6 +49,42 @@ class PokemonsServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void it_should_call_multiple_times_to_aso_currencies_client_when_offset_is_less_than_count() {
+        mockPokemonsClientPagination();
+
+        pokemonsService.getPokemons().subscribe();
+
+        verify(pokemonsWebClient,
+                atLeast(2)
+                        .description("It should call two times pokemons client"))
+                .getAllPokemons(0);
+    }
+
+
+
+    private void mockPokemonsClientPagination(){
+        when(pokemonsWebClient.getAllPokemons(0))
+                .thenReturn(Mono.just(buildPokemonsPaginationResponse(60,
+                        "www.next.com",
+                        "www.previous.com",
+                        POKEMONS_PAGE_1)))
+                .thenReturn(Mono.just(buildPokemonsPaginationResponse(60,
+                        "www.next.com",
+                        "www.previous.com",
+                        POKEMONS_PAGE_2)));
+    }
+
+    private Map<String, Object> buildPokemonsPaginationResponse(Integer count,
+                                                                String nextUrl,
+                                                                String previousUrl,
+                                                                List<Map<String, Object>> pokemonsResults) {
+        return Map.of(
+                "count", count,
+                "next", nextUrl,
+                "previous", previousUrl,
+                "results", pokemonsResults);
+    }
     @BeforeEach
     void setup() {
         this.pokemonsService = new PokemonsService(pokemonsWebClient);
@@ -61,4 +96,11 @@ class PokemonsServiceTest {
     private PokemonsWebClient pokemonsWebClient;
     @Mock
     private Map<String, Object> pokemonsList;
+
+    private static final List<Map<String, Object>> POKEMONS_PAGE_1 = List.of(
+            Map.of("name", "bulbasaur", "url", "https://pokeapi.co/api/v2/pokemon/1/")
+    );
+    private static final List<Map<String, Object>> POKEMONS_PAGE_2 = List.of(
+            Map.of("name", "bulbasaur2", "url", "https://pokeapi.co/api/v2/pokemon/2/")
+    );
 }
