@@ -50,7 +50,7 @@ class PokemonsServiceTest {
     }
 
     @Test
-    void it_should_call_multiple_times_to_aso_currencies_client_when_offset_is_less_than_count() {
+    void it_should_call_multiple_times_to_pokemons_client_when_offset_is_less_than_count() {
         mockPokemonsClientPagination();
 
         pokemonsService.getPokemons().subscribe();
@@ -58,10 +58,20 @@ class PokemonsServiceTest {
         verify(pokemonsWebClient,
                 atLeast(2)
                         .description("It should call two times pokemons client"))
-                .getAllPokemons(0);
+                .getAllPokemons(anyInt());
     }
 
+    @Test
+    void it_should_save_multiple_times_to_pokemons_client_when_offset_is_less_than_count() {
+        mockPokemonsClientPagination();
 
+        pokemonsService.getPokemons().subscribe();
+
+        verify(pokemonsWebClient,
+                atLeast(3)
+                        .description("It should call two times pokemons client"))
+                .getAllPokemons(anyInt());
+    }
 
     private void mockPokemonsClientPagination(){
         when(pokemonsWebClient.getAllPokemons(0))
