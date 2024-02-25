@@ -18,18 +18,7 @@ public class PokemonsService {
     }
 
     private Mono<List<Map<String, Object>>> getAllPokemons() {
-        return pokemonsWebClient.getAllPokemons(0)
-                .flatMap(pokemonsClientResponse -> {
-                    var pokemons = new ArrayList<Map<String, Object>>();
-                    pokemons.addAll((List<Map<String, Object>>) pokemonsClientResponse.get("results"));
-
-                    var count = (Integer) pokemonsClientResponse.get("count")/20;
-                    for (int offset = 20; offset <= 40; offset = offset + 20) {
-                        pokemonsWebClient.getAllPokemons(offset);
-                    }
-
-                    return Mono.just(pokemons);
-                });
+        return pokemonsWebClient.getAllPokemons(0).map(List::of);
     }
 
     private Map<String, Object> assemblerResponse(List<Map<String, Object>> body) {

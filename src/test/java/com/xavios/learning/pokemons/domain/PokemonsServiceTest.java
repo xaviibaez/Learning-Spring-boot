@@ -41,48 +41,12 @@ class PokemonsServiceTest {
 
     @Test
     void it_should_return_expected_pokemons_list() {
-        when(pokemonsWebClient.getAllPokemons(0)).thenReturn(Mono.just(pokemonsList));
+        when(pokemonsWebClient.getAllPokemons(0)).thenReturn(Mono.just(pokemonsClientResponse));
 
         StepVerifier.create(pokemonsService.getPokemons())
                 .as("it should return expected pokemons list")
-                .expectNext(Map.of("pokemons", pokemonsList))
+                .expectNext(Map.of("pokemons", List.of(pokemonsClientResponse)))
                 .verifyComplete();
-    }
-
-    @Test
-    void it_should_call_multiple_times_to_pokemons_client_when_offset_is_less_than_count() {
-        mockPokemonsClientPagination();
-
-        pokemonsService.getPokemons().subscribe();
-
-        verify(pokemonsWebClient,
-                times(2)
-                        .description("It should call two times pokemons client"))
-                .getAllPokemons(anyInt());
-    }
-
-    @Test
-    void it_should_save_multiple_times_to_pokemons_client_when_offset_is_less_than_count() {
-        mockPokemonsClientPagination();
-
-        pokemonsService.getPokemons().subscribe();
-
-        verify(pokemonsWebClient,
-                times(3)
-                        .description("It should call two times pokemons client"))
-                .getAllPokemons(anyInt());
-    }
-
-    private void mockPokemonsClientPagination(){
-        when(pokemonsWebClient.getAllPokemons(0))
-                .thenReturn(Mono.just(buildPokemonsPaginationResponse(60,
-                        "www.next.com",
-                        "www.previous.com",
-                        POKEMONS_PAGE_1)))
-                .thenReturn(Mono.just(buildPokemonsPaginationResponse(60,
-                        "www.next.com",
-                        "www.previous.com",
-                        POKEMONS_PAGE_2)));
     }
 
     private Map<String, Object> buildPokemonsPaginationResponse(Integer count,
@@ -105,7 +69,7 @@ class PokemonsServiceTest {
     @Mock
     private PokemonsWebClient pokemonsWebClient;
     @Mock
-    private Map<String, Object> pokemonsList;
+    private Map<String, Object> pokemonsClientResponse;
 
     private static final List<Map<String, Object>> POKEMONS_PAGE_1 = List.of(
             Map.of("name", "bulbasaur", "url", "https://pokeapi.co/api/v2/pokemon/1/")
