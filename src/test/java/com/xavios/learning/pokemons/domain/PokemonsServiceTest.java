@@ -56,7 +56,7 @@ class PokemonsServiceTest {
         pokemonsService.getPokemons().subscribe();
 
         verify(pokemonsWebClient,
-                atLeast(2)
+                times(2)
                         .description("It should call two times pokemons client"))
                 .getAllPokemons(anyInt());
     }
@@ -68,7 +68,7 @@ class PokemonsServiceTest {
         pokemonsService.getPokemons().subscribe();
 
         verify(pokemonsWebClient,
-                atLeast(3)
+                times(3)
                         .description("It should call two times pokemons client"))
                 .getAllPokemons(anyInt());
     }
