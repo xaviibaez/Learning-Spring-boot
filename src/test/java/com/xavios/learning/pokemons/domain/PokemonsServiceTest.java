@@ -33,7 +33,7 @@ class PokemonsServiceTest {
 
         StepVerifier.create(pokemonsService.getPokemons())
                 .as("It should call pokemons web client")
-                .assertNext(x -> verify(pokemonsWebClient, only()
+                .assertNext(x -> verify(pokemonsWebClient, atLeast(1)
                         .description("It should call pokemons web client"))
                         .getAllPokemons(0))
                 .verifyComplete();
@@ -49,16 +49,24 @@ class PokemonsServiceTest {
                 .verifyComplete();
     }
 
-    private Map<String, Object> buildPokemonsPaginationResponse(Integer count,
-                                                                String nextUrl,
-                                                                String previousUrl,
-                                                                List<Map<String, Object>> pokemonsResults) {
-        return Map.of(
-                "count", count,
-                "next", nextUrl,
-                "previous", previousUrl,
-                "results", pokemonsResults);
+    @Test
+    void it_should_call_2_times_pokemons_client() {
+        /*verify(pokemonsWebClient,
+                times(2)
+                        .description("It should call two times pokemons client"))
+                .getAllPokemons(anyInt());*/
+
+        //TODO: Este tests es correcto?
+        when(pokemonsWebClient.getAllPokemons(anyInt())).thenReturn(Mono.just(Map.of()));
+
+        StepVerifier.create(pokemonsService.getPokemons())
+                .as("It should call pokemons web client")
+                .assertNext(x -> verify(pokemonsWebClient, times(2)
+                        .description("It should call pokemons web client"))
+                        .getAllPokemons(anyInt()))
+                .verifyComplete();
     }
+
     @BeforeEach
     void setup() {
         this.pokemonsService = new PokemonsService(pokemonsWebClient);
