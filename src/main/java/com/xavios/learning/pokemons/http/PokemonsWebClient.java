@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class PokemonsWebClient {
 
-    public Mono<Map<String, Object>> getAllPokemons(int offset) {
+    public Mono<Map<String, Object>> getPokemons(int offset) {
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder

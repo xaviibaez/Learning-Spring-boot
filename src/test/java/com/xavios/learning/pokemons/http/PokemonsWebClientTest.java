@@ -20,7 +20,7 @@ class PokemonsWebClientTest {
 
     @Test
     void it_should_return_not_null() {
-        assertThat(pokemonsWebClient.getAllPokemons(0))
+        assertThat(pokemonsWebClient.getPokemons(0))
                 .as("It should return not null")
                 .isNotNull();
     }
@@ -29,7 +29,7 @@ class PokemonsWebClientTest {
     void it_should_return_expected_response() {
         setupResponseClient(RESPONSE_OK, 200);
 
-        StepVerifier.create(pokemonsWebClient.getAllPokemons(0))
+        StepVerifier.create(pokemonsWebClient.getPokemons(0))
                 .as("It should return expected response")
                 .expectNext(RESPONSE_OK)
                 .verifyComplete();
@@ -39,7 +39,7 @@ class PokemonsWebClientTest {
     void it_should_return_error_when_have_one_error_in_client() {
         setupResponseClient(RESPONSE_KO, 500);
 
-        StepVerifier.create(pokemonsWebClient.getAllPokemons(0))
+        StepVerifier.create(pokemonsWebClient.getPokemons(0))
                 .as("It should return error")
                 .verifyError(ClientException.class);
     }
@@ -48,7 +48,7 @@ class PokemonsWebClientTest {
     void it_should_return_expected_exception_when_have_one_error_in_client() {
         setupResponseClient(RESPONSE_KO, 500);
 
-        StepVerifier.create(pokemonsWebClient.getAllPokemons(0))
+        StepVerifier.create(pokemonsWebClient.getPokemons(0))
                 .as("It should return expected error response")
                 .verifyErrorMessage(RESPONSE_KO_STRING);
     }
@@ -57,7 +57,7 @@ class PokemonsWebClientTest {
     void it_should_return_expected_error_code_when_have_one_error_in_client() {
         setupResponseClient(RESPONSE_KO, 500);
 
-        StepVerifier.create(pokemonsWebClient.getAllPokemons(0))
+        StepVerifier.create(pokemonsWebClient.getPokemons(0))
                 .as("It should return expected error response code")
                 .verifyErrorSatisfies(error ->
                         assertThat(((ClientException) error).getHttpStatusCode())
