@@ -16,12 +16,20 @@ public class PokemonsService {
     }
 
     private Mono<List<Map<String, Object>>> getAllPokemons() {
-        return pokemonsWebClient.getPokemons(0).flatMap(x -> {
-            pokemonsWebClient.getPokemons(20);
+        return pokemonsWebClient.getPokemons(0).flatMap(result -> {
+            List<Map<String, Object>> pokemons = (List<Map<String, Object>>) (result.get("results"));
+            int count = (int) result.get("count");
 
-            List<Map<String, Object>> results = (List<Map<String, Object>>)(x.get("results"));
+            for (int offset = 20; offset <= count; offset = offset + 20) {
+                pokemonsWebClient.getPokemons(offset).subscribe(response -> {
+                    System.out.println("response: " + response.get("results"));
+                    System.out.println("results: " + pokemons.size());
+                    pokemons.addAll((List<Map<String, Object>>) response.get("results"));
+                });
+                //pokemons.addAll((List<Map<String, Object>>) response.get("results"));
+            }
 
-            return Mono.just(results != null ? results : List.of(x));
+            return Mono.just(pokemons != null ? pokemons : List.of(result));
         });
     }
 

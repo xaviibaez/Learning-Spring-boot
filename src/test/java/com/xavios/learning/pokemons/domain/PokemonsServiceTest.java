@@ -108,8 +108,8 @@ class PokemonsServiceTest {
             "next", "https://pokeapi.co/api/v2/pokemon?offset=40&limit=20",
             "previous", "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20",
             "results", List.of(
-                    Map.of("name", "bulbasaur","url", "https://pokeapi.co/api/v2/pokemon/21/"),
-                    Map.of("name", "ivysaur", "url", "https://pokeapi.co/api/v2/pokemon/22/")
+                    Map.of("name", "venusaur","url", "https://pokeapi.co/api/v2/pokemon/21/"),
+                    Map.of("name", "charmander", "url", "https://pokeapi.co/api/v2/pokemon/22/")
             )
     );
     private final Map<String, Object> POKEMONS_SERVICE_ASSEMBLED_RESPONSE_PAGE_0 = Map.of(
@@ -122,8 +122,8 @@ class PokemonsServiceTest {
             "pokemons", List.of(
                     Map.of("name", "bulbasaur", "url", "https://pokeapi.co/api/v2/pokemon/1/"),
                     Map.of("name", "ivysaur", "url", "https://pokeapi.co/api/v2/pokemon/2/"),
-                    Map.of("name", "bulbasaur", "url", "https://pokeapi.co/api/v2/pokemon/21/"),
-                    Map.of("name", "ivysaur", "url", "https://pokeapi.co/api/v2/pokemon/22/")
+                    Map.of("name", "venusaur", "url", "https://pokeapi.co/api/v2/pokemon/21/"),
+                    Map.of("name", "charmander", "url", "https://pokeapi.co/api/v2/pokemon/22/")
             )
     );
 }
