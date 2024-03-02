@@ -5,6 +5,7 @@ El porque del TDD
     cada rama es una iteracion
     cada iteracion es un ciclo de red green refactor
     iteration/iteration_name
+    todos los commits deben funcionar
 
 tecnologias usadas
     
