@@ -39,6 +39,25 @@ public class PokemonsWebClient {
                 });
     }
 
+    public Mono<Map<String, Object>> getPokemonDetail(String name) {
+        return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/" + name)
+                        .build()
+                )
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, error -> error
+                        .bodyToMono(String.class)
+                        .defaultIfEmpty("Error")
+                        .flatMap(body -> Mono.error(
+                                new ClientException(
+                                        String.valueOf(error.statusCode().value()), body)
+                        )))
+                .bodyToMono(new ParameterizedTypeReference<>() {
+                });
+    }
+
     public PokemonsWebClient(@Autowired WebClient.Builder webClientBuilder, @Value("${pokemon_web_client}") String host) {
         var connectionProvider = ConnectionProvider.builder("pokemonClientConnectionPool")
                 .maxConnections(1000)

@@ -66,6 +66,54 @@ class PokemonsWebClientTest {
                 );
     }
 
+    @Test
+    void it_should_return_not_null_pokemon_detail() {
+        assertThat(pokemonsWebClient.getPokemonDetail(""))
+                .as("It should return not null")
+                .isNotNull();
+    }
+
+    @Test
+    void it_should_return_expected_response_pokemon_detail() {
+        setupResponseClientDetail(RESPONSE_OK, 200);
+
+        StepVerifier.create(pokemonsWebClient.getPokemonDetail("test"))
+                .as("It should return expected response")
+                .expectNext(RESPONSE_OK)
+                .verifyComplete();
+    }
+
+    @Test
+    void it_should_return_error_when_have_one_error_in_client_pokemon_detail() {
+        setupResponseClientDetail(RESPONSE_KO, 500);
+
+        StepVerifier.create(pokemonsWebClient.getPokemonDetail("test"))
+                .as("It should return error")
+                .verifyError(ClientException.class);
+    }
+
+    @Test
+    void it_should_return_expected_exception_when_have_one_error_in_pokemon_detail_client() {
+        setupResponseClientDetail(RESPONSE_KO, 500);
+
+        StepVerifier.create(pokemonsWebClient.getPokemonDetail("test"))
+                .as("It should return expected error response")
+                .verifyErrorMessage(RESPONSE_KO_STRING);
+    }
+
+    @Test
+    void it_should_return_expected_error_code_when_have_one_error_in_pokemons_detail_client() {
+        setupResponseClientDetail(RESPONSE_KO, 500);
+
+        StepVerifier.create(pokemonsWebClient.getPokemonDetail("test"))
+                .as("It should return expected error response code")
+                .verifyErrorSatisfies(error ->
+                        assertThat(((ClientException) error).getHttpStatusCode())
+                                .as("It should return error 500")
+                                .isEqualTo("500")
+                );
+    }
+
     @BeforeEach
     void startServer() {
         server = ClientAndServer.startClientAndServer(0);
@@ -82,6 +130,17 @@ class PokemonsWebClientTest {
         server.when(request()
                         .withMethod("GET")
                         .withPath("/api/v2/pokemon"))
+                .respond(response()
+                        .withStatusCode(statusCode)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(mapToJsonString(response)));
+    }
+
+    private void setupResponseClientDetail(Map<String, Object> response, Integer statusCode) {
+        server.when(request()
+                        .withMethod("GET")
+                        .withPath("/api/v2/pokemon/test"))
+                //TODO: Hacer "test" dinamico con withPathParameter -> de primeras no me funciona
                 .respond(response()
                         .withStatusCode(statusCode)
                         .withContentType(MediaType.APPLICATION_JSON)
